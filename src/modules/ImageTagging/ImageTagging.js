@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import Icon from '@material-ui/icons/PhotoFilter';
+import EyeIcon from '@material-ui/icons/RemoveRedEye';
+
+import { Panel } from '../../../src/components';
 
 import {
   StyledContainer,
@@ -11,20 +14,10 @@ import {
   StyledImageContainer,
   StyledImage,
   StyledPoint,
+  StyledSelectedPointContainer,
 } from './ImageTaggingStyled';
 
 import childImage from '../../images/child-image.jpg';
-
-const useStyles = makeStyles(theme => ({
-  fab: {
-    margin: theme.spacing(1),
-  },
-  extendedIcon: {
-    marginRight: theme.spacing(1),
-  },
-}));
-
-const classes = useStyles();
 
 const ImageTagging = () => {
   let imageContainerRef = useRef(null);
@@ -32,16 +25,22 @@ const ImageTagging = () => {
   const [mousePosition, setMousePosition] = useState({ left: 0, top: 0 });
   const [selectedPoints, setSelectedPoints] = useState([]);
   const [pointList, setPointList] = useState([]);
+  const [drawValue, setDrawValue] = useState();
 
   useEffect(() => {
     if (selectedPoints.length === 4) {
       setPointList(prevState => [...prevState, selectedPoints]);
       setSelectedPoints([]);
+      setDrawValue(null);
     }
     console.log(pointList);
   }, [pointList, selectedPoints]);
 
   const handleMouseDown = e => {
+    if (!drawValue) {
+      return;
+    }
+
     const position = {
       left: e.pageX,
       top: e.pageY,
@@ -50,30 +49,56 @@ const ImageTagging = () => {
     setSelectedPoints(prevState => [...prevState, position]);
   };
 
+  const handleToggleButton = (event, newDrawValue) => {
+    setDrawValue(newDrawValue);
+
+    if (!newDrawValue) {
+      setSelectedPoints([]);
+    }
+  };
+
   // refer https://codesandbox.io/s/72py4jlll6
   return (
     <StyledContainer>
       <StyledLeftPanel>
-        <Fab color="extended" aria-label="Add" className={classes.fab}>
-          <AddIcon />
-        </Fab>
+        <Panel title="Tools">
+          <ToggleButtonGroup
+            size="small"
+            value={drawValue}
+            exclusive
+            onChange={handleToggleButton}
+          >
+            <ToggleButton key={1} value="draw">
+              <Icon />
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Panel>
       </StyledLeftPanel>
       <StyledBodyContent>
-        <StyledImageContainer
-          ref={imageContainerRef}
-          onMouseDown={handleMouseDown}
-        >
-          <StyledImage src={childImage} />
-          {selectedPoints.map(position => (
-            <StyledPoint position={position} />
-          ))}
-        </StyledImageContainer>
-        <div>{JSON.stringify(mousePosition)}</div>
+        <Panel title="Image">
+          <StyledImageContainer
+            ref={imageContainerRef}
+            onMouseDown={handleMouseDown}
+          >
+            <StyledImage src={childImage} />
+            {selectedPoints.map(position => (
+              <StyledPoint position={position} />
+            ))}
+          </StyledImageContainer>
+          <div>{JSON.stringify(mousePosition)}</div>
+        </Panel>
       </StyledBodyContent>
       <StyledRightPanel>
-        {pointList.map((points, index) => {
-          return <div>Object {index + 1}</div>;
-        })}
+        <Panel title="Selected points">
+          {pointList.map((points, index) => {
+            return (
+              <StyledSelectedPointContainer>
+                <EyeIcon />
+                Object {index + 1}
+              </StyledSelectedPointContainer>
+            );
+          })}
+        </Panel>
       </StyledRightPanel>
     </StyledContainer>
   );

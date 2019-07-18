@@ -2,13 +2,15 @@ import styled from 'styled-components';
 
 export const StyledContainer = styled.div`
   display: flex;
+  background-color: #343434;
 `;
 
 export const StyledLeftPanel = styled.div`
   flex: 0;
   display: flex;
   flex-direction: column;
-  padding: 0 10px;
+  align-items: center;
+  border-right: 8px solid gray;
 `;
 
 export const StyledBodyContent = styled.div`
@@ -17,7 +19,8 @@ export const StyledBodyContent = styled.div`
 
 export const StyledRightPanel = styled.div`
   flex: 0;
-  padding: 0 10px;
+  min-width: 200px;
+  border-left: 8px solid gray;
 `;
 
 export const StyledImageContainer = styled.div`
@@ -39,4 +42,17 @@ export const StyledPoint = styled.div`
   border-radius: 5px;
   background-color: yellow;
   box-shadow: 0 0 0 1px red;
+`;
+
+export const StyledSelectedPointContainer = styled.div`
+  display: flex;
+  padding: 5px;
+  color: white;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px dashed gray;
+
+  & > svg {
+    padding-right: 10px;
+  }
 `;
