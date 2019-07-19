@@ -24,13 +24,27 @@ export const StyledRightPanel = styled.div`
 `;
 
 export const StyledImageContainer = styled.div`
+  display: block;
+  position: relative;
   height: 100%;
   width: 100%;
 `;
 
 export const StyledImage = styled.img`
+  display: block;
+  position: relative;
   height: 100%;
   width: 100%;
+`;
+
+export const StyledOverlay = styled.div`
+  height: ${({ height }) => height}px;
+  width: ${({ width }) => width}px;
+  background: black;
+  opacity: 0.5;
+  position: absolute;
+  display: block;
+  z-index: 1;
 `;
 
 export const StyledPoint = styled.div`
@@ -42,6 +56,7 @@ export const StyledPoint = styled.div`
   border-radius: 5px;
   background-color: yellow;
   box-shadow: 0 0 0 1px red;
+  z-index: 2;
 `;
 
 export const StyledSelectedPointContainer = styled.div`
@@ -55,4 +70,17 @@ export const StyledSelectedPointContainer = styled.div`
   & > svg {
     padding-right: 10px;
   }
+`;
+
+export const StyledSelectedArea = styled.div`
+  position: absolute;
+  left: ${({ left }) => left}px;
+  top: ${({ top }) => top}px;
+  height: ${({ height }) => height}px;
+  width: ${({ width }) => width}px;
+  border: 1px dashed white;
+  background: url(${({ backgroundImage }) => backgroundImage}) -${({ left }) =>
+      left}px -${({ top }) => top}px / ${({ imageWidth }) => imageWidth}px
+    ${({ imageHeight }) => imageHeight}px no-repeat rgb(255, 255, 255);
+  z-index: 4;
 `;
