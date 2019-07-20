@@ -92,8 +92,6 @@ const ImageTagging = () => {
       })
     );
   };
-  // refer https://codesandbox.io/s/72py4jlll6
-  // https://www.jqueryscript.net/demo/jQuery-Plugin-For-Selecting-Multiple-Areas-of-An-Image-Select-Areas/
 
   return (
     <StyledContainer>
