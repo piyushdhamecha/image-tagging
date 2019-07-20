@@ -66,8 +66,9 @@ export const StyledSelectedPointContainer = styled.div`
   align-items: center;
   padding: 7px 0;
   border-bottom: 1px dashed gray;
+  cursor: pointer;
 
-  & > svg {
+  & > span {
     padding-right: 10px;
   }
 `;
@@ -83,4 +84,5 @@ export const StyledSelectedArea = styled.div`
       left}px -${({ top }) => top}px / ${({ imageWidth }) => imageWidth}px
     ${({ imageHeight }) => imageHeight}px no-repeat rgb(255, 255, 255);
   z-index: 4;
+  display: ${({ visible }) => (visible ? 'block' : 'none')};
 `;

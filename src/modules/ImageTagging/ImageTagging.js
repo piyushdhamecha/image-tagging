@@ -5,6 +5,7 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import Icon from '@material-ui/icons/PhotoFilter';
 import EyeIcon from '@material-ui/icons/RemoveRedEye';
+import DoneIcon from '@material-ui/icons/Done';
 
 import { Panel } from '../../components';
 import { getHeight, getWidth } from '../../utils';
@@ -42,9 +43,9 @@ const ImageTagging = () => {
       const area = {
         height,
         width,
-        points: selectedPoints,
         minLeft,
         minTop,
+        visible: true,
       };
 
       setSelectedAreas(prevState => [...prevState, area]);
@@ -77,6 +78,20 @@ const ImageTagging = () => {
     }
   };
 
+  const handleTagObjectClick = selectedIndex => () => {
+    setSelectedAreas(prevState =>
+      _.map(prevState, (area, index) => {
+        if (selectedIndex === index) {
+          return {
+            ...area,
+            visible: !area.visible,
+          };
+        }
+
+        return area;
+      })
+    );
+  };
   // refer https://codesandbox.io/s/72py4jlll6
   // https://www.jqueryscript.net/demo/jQuery-Plugin-For-Selecting-Multiple-Areas-of-An-Image-Select-Areas/
 
@@ -112,33 +127,47 @@ const ImageTagging = () => {
             {selectedPoints.map(position => (
               <StyledPoint position={position} />
             ))}
-            {_.map(selectedAreas, ({ minLeft, minTop, height, width }) => {
-              return (
-                <StyledSelectedArea
-                  left={minLeft}
-                  top={minTop}
-                  height={height}
-                  width={width}
-                  backgroundImage={childImage}
-                  imageHeight={
-                    imageRef && imageRef.current && imageRef.current.height
-                  }
-                  imageWidth={
-                    imageRef && imageRef.current && imageRef.current.width
-                  }
-                />
-              );
-            })}
+            {drawValue &&
+              _.map(
+                selectedAreas,
+                ({ minLeft, minTop, height, width, visible }) => {
+                  return (
+                    <StyledSelectedArea
+                      left={minLeft}
+                      top={minTop}
+                      height={height}
+                      width={width}
+                      backgroundImage={childImage}
+                      imageHeight={
+                        imageRef && imageRef.current && imageRef.current.height
+                      }
+                      imageWidth={
+                        imageRef && imageRef.current && imageRef.current.width
+                      }
+                      visible={visible}
+                    />
+                  );
+                }
+              )}
           </StyledImageContainer>
         </Panel>
       </StyledBodyContent>
       <StyledRightPanel>
         <Panel title="Selected points">
-          {selectedAreas.map((area, index) => {
+          {selectedAreas.map(({ visible }, index) => {
             return (
-              <StyledSelectedPointContainer>
-                <EyeIcon />
-                Object {index + 1}
+              <StyledSelectedPointContainer
+                onClick={handleTagObjectClick(index)}
+              >
+                <span>
+                  <EyeIcon />
+                </span>
+                <span>Object {index + 1}</span>
+                {visible && (
+                  <span>
+                    <DoneIcon color={'secondary'} />
+                  </span>
+                )}
               </StyledSelectedPointContainer>
             );
           })}
